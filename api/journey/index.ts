@@ -3,15 +3,24 @@ import { prisma } from '../_lib/prisma.js';
 import { handleCors, requireAuth } from '../_lib/auth.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (handleCors(req, res)) return;
+  try {
+    if (handleCors(req, res)) return;
 
-  switch (req.method) {
-    case 'GET':
-      return getJourneys(req, res);
-    case 'POST':
-      return createJourney(req, res);
-    default:
-      return res.status(405).json({ error: 'Method not allowed' });
+    switch (req.method) {
+      case 'GET':
+        return await getJourneys(req, res);
+      case 'POST':
+        return await createJourney(req, res);
+      default:
+        return res.status(405).json({ error: 'Method not allowed' });
+    }
+  } catch (error: any) {
+    console.error('Unhandled API Error:', error);
+    return res.status(500).json({ 
+      error: 'Internal Server Error', 
+      details: error?.message || String(error),
+      stack: error?.stack 
+    });
   }
 }
 
