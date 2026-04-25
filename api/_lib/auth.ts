@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import * as jwt from 'jsonwebtoken';
+import jwt = require('jsonwebtoken');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'change-me-in-production';
 

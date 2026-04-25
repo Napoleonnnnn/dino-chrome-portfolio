@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import * as jwt from 'jsonwebtoken';
-import * as bcrypt from 'bcryptjs';
+import jwt = require('jsonwebtoken');
+import bcrypt = require('bcryptjs');
 import { handleCors } from '../_lib/auth';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'change-me-in-production';
