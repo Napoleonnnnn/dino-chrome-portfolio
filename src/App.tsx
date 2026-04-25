@@ -12,6 +12,8 @@ import Login from "./pages/admin/Login";
 import AdminLayout from "./pages/admin/AdminLayout";
 import JourneyManager from "./pages/admin/JourneyManager";
 
+import JourneyDetail from "./pages/JourneyDetail";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -24,6 +26,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/journey/:slug" element={<JourneyDetail />} />
             
             {/* Admin Routes */}
             <Route path="/admin/login" element={<Login />} />

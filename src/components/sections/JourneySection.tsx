@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import { Calendar, MapPin } from 'lucide-react';
+import { Calendar, MapPin, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
@@ -9,6 +10,7 @@ interface JourneyEntry {
   id: string;
   date: string;
   title: string;
+  slug: string;
   summary: string;
   coverImage: string | null;
   location?: string;
@@ -59,10 +61,17 @@ function TimelineCard({ entry, index }: { entry: JourneyEntry; index: number }) 
               )}
             </div>
 
-            <h3 className="heading-md mb-2">{entry.title}</h3>
-            <p className="text-muted-foreground text-sm leading-relaxed">
+            <h3 className="heading-md mb-2 group-hover:text-primary transition-colors">{entry.title}</h3>
+            <p className="text-muted-foreground text-sm leading-relaxed mb-4">
               {entry.summary}
             </p>
+            <Link 
+              to={`/journey/${entry.slug}`}
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground hover:text-primary transition-colors group/link"
+            >
+              Read full story 
+              <ArrowRight size={14} className="group-hover/link:translate-x-1 transition-transform" />
+            </Link>
           </motion.div>
         </div>
 
@@ -142,10 +151,17 @@ function TimelineCard({ entry, index }: { entry: JourneyEntry; index: number }) 
               )}
             </div>
 
-            <h3 className="text-base sm:text-lg font-semibold mb-1.5">{entry.title}</h3>
-            <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
+            <h3 className="text-base sm:text-lg font-semibold mb-1.5 group-hover:text-primary transition-colors">{entry.title}</h3>
+            <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed mb-3">
               {entry.summary}
             </p>
+            <Link 
+              to={`/journey/${entry.slug}`}
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-foreground hover:text-primary transition-colors group/link"
+            >
+              Read full story 
+              <ArrowRight size={12} className="group-hover/link:translate-x-1 transition-transform" />
+            </Link>
           </motion.div>
         </div>
       </div>
