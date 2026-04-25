@@ -25,6 +25,18 @@ export function Navigation({ scrollContainerRef }: NavigationProps) {
   const mouseAtTop = useRef(true);
   const activeSection = useActiveSection(sectionIds);
 
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
   useEffect(() => {
     const scrollContainer = scrollContainerRef.current;
     if (!scrollContainer) return;
@@ -81,15 +93,15 @@ export function Navigation({ scrollContainerRef }: NavigationProps) {
       }`}
       style={{ willChange: 'transform' }}
     >
-      <nav className="container mx-auto px-6 lg:px-12">
-        <div className="flex items-center justify-between h-20">
+      <nav className="container mx-auto px-4 sm:px-6 lg:px-12" aria-label="Main navigation">
+        <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo */}
-          <a href="#" className="text-xl font-semibold tracking-tight">
+          <a href="#" className="text-lg sm:text-xl font-semibold tracking-tight" aria-label="dino.dev — go to homepage">
             dino<span className="text-muted-foreground">.dev</span>
           </a>
 
           {/* Desktop Nav */}
-          <ul className="hidden md:flex items-center gap-12">
+          <ul className="hidden md:flex items-center gap-8 lg:gap-12">
             {navItems.map((item) => {
               const isActive = activeSection === item.href.substring(1);
               return (
@@ -108,13 +120,13 @@ export function Navigation({ scrollContainerRef }: NavigationProps) {
           </ul>
 
           {/* Right side actions */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             <ThemeToggle />
             
             {/* CTA Button */}
             <a 
               href="#contact" 
-              className="hidden md:block text-sm font-medium px-6 py-2.5 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity"
+              className="hidden md:block text-sm font-medium px-5 py-2 lg:px-6 lg:py-2.5 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity"
             >
               Let's Talk
             </a>
@@ -123,7 +135,9 @@ export function Navigation({ scrollContainerRef }: NavigationProps) {
             <button
               className="md:hidden w-10 h-10 flex items-center justify-center rounded-full hover:bg-muted transition-colors"
               onClick={() => setIsOpen(!isOpen)}
-              aria-label="Toggle menu"
+              aria-label={isOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isOpen}
+              aria-controls="mobile-nav-menu"
             >
               {isOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
@@ -134,12 +148,13 @@ export function Navigation({ scrollContainerRef }: NavigationProps) {
         <AnimatePresence>
           {isOpen && (
             <motion.div
+              id="mobile-nav-menu"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="md:hidden overflow-hidden border-t border-border/50"
+              className="md:hidden overflow-hidden border-t border-border/50 bg-background/95 backdrop-blur-xl -mx-4 sm:-mx-6 px-4 sm:px-6"
             >
-              <ul className="py-6 space-y-1">
+              <ul className="py-4 sm:py-6 space-y-1">
                 {navItems.map((item, index) => (
                   <motion.li 
                     key={item.href}
@@ -150,12 +165,27 @@ export function Navigation({ scrollContainerRef }: NavigationProps) {
                     <a
                       href={item.href}
                       onClick={() => setIsOpen(false)}
-                      className="block py-3 text-lg text-muted-foreground hover:text-foreground transition-colors"
+                      className="block py-3 sm:py-4 text-base sm:text-lg text-muted-foreground hover:text-foreground transition-colors active:text-foreground"
                     >
                       {item.label}
                     </a>
                   </motion.li>
                 ))}
+                {/* Mobile CTA */}
+                <motion.li
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: navItems.length * 0.1 }}
+                  className="pt-2"
+                >
+                  <a 
+                    href="#contact" 
+                    onClick={() => setIsOpen(false)}
+                    className="block text-center text-sm font-medium px-6 py-3 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity"
+                  >
+                    Let's Talk
+                  </a>
+                </motion.li>
               </ul>
             </motion.div>
           )}

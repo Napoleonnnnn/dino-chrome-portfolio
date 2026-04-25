@@ -1,8 +1,8 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* Custom Cursor Styles — only on devices with a fine pointer (mouse) */
+@media (hover: hover) and (pointer: fine) {
+  body, a, button {
+    cursor: none;
+  }
 }
 
 .logo {
@@ -39,9 +39,4 @@
 
 .read-the-docs {
   color: #888;
-}
-
-/* Custom Cursor Styles */
-body, a, button {
-  cursor: none;
 }

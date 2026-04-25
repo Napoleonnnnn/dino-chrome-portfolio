@@ -1,9 +1,25 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const CustomCursor = () => {
   const cursorRef = useRef<HTMLDivElement>(null);
+  const [hasFinePointer, setHasFinePointer] = useState(false);
 
   useEffect(() => {
+    // Only enable custom cursor on devices with a fine pointer (mouse)
+    const mql = window.matchMedia('(hover: hover) and (pointer: fine)');
+    setHasFinePointer(mql.matches);
+
+    const onChange = (e: MediaQueryListEvent) => {
+      setHasFinePointer(e.matches);
+    };
+
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
+  }, []);
+
+  useEffect(() => {
+    if (!hasFinePointer) return;
+
     const onMouseMove = (e: MouseEvent) => {
       if (cursorRef.current) {
         cursorRef.current.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%)`;
@@ -20,12 +36,15 @@ const CustomCursor = () => {
     return () => {
       document.removeEventListener('mousemove', onMouseMove);
     };
-  }, []); // Empty dependency array ensures this runs only once
+  }, [hasFinePointer]);
+
+  // Don't render on touch devices
+  if (!hasFinePointer) return null;
 
   return (
     <div
       ref={cursorRef}
-      className="fixed top-0 left-0 w-3 h-3 bg-black rounded-full pointer-events-none z-[9999]"
+      className="fixed top-0 left-0 w-3 h-3 bg-foreground rounded-full pointer-events-none z-[9999]"
     />
   );
 };

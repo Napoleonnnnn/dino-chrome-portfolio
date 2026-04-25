@@ -101,27 +101,40 @@
   html {
     /* Properties moved to .snap-container */
   }
+
+  /* Screen reader only — for SEO-friendly hidden text */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
 }
 
 @layer components {
   .heading-xl {
-    @apply text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-none;
+    @apply text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-none;
     font-family: var(--font-display);
   }
 
   .heading-lg {
-    @apply text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight;
+    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight;
     font-family: var(--font-display);
   }
 
   .heading-md {
-    @apply text-xl md:text-2xl font-semibold tracking-tight;
+    @apply text-lg sm:text-xl md:text-2xl font-semibold tracking-tight;
     font-family: var(--font-display);
   }
 
   .text-mono {
     font-family: var(--font-mono);
-    @apply text-sm tracking-wide;
+    @apply text-xs sm:text-sm tracking-wide;
   }
 
   .link-underline {
@@ -138,7 +151,7 @@
   }
 
   .card-elevated {
-    @apply bg-card rounded-2xl p-8 transition-all duration-500;
+    @apply bg-card rounded-2xl p-5 sm:p-6 md:p-8 transition-all duration-500;
     box-shadow: 0 0 0 1px hsl(var(--border));
   }
 
@@ -147,16 +160,23 @@
     transform: translateY(-4px);
   }
 
+  /* Disable hover transform on touch devices to prevent stuck states */
+  @media (hover: none) {
+    .card-elevated:hover {
+      transform: none;
+    }
+  }
+
   .btn-primary {
-    @apply px-8 py-4 bg-foreground text-background font-medium rounded-full transition-all duration-300 hover:opacity-90 hover:scale-[1.02] active:scale-[0.98];
+    @apply px-6 py-3 sm:px-8 sm:py-4 bg-foreground text-background font-medium rounded-full transition-all duration-300 hover:opacity-90 hover:scale-[1.02] active:scale-[0.98];
   }
 
   .btn-outline {
-    @apply px-8 py-4 border border-foreground/20 text-foreground font-medium rounded-full transition-all duration-300 hover:bg-foreground hover:text-background;
+    @apply px-6 py-3 sm:px-8 sm:py-4 border border-foreground/20 text-foreground font-medium rounded-full transition-all duration-300 hover:bg-foreground hover:text-background;
   }
 
   .section-padding {
-    @apply py-24 md:py-32 lg:py-40;
+    @apply py-16 sm:py-24 md:py-32 lg:py-40;
   }
 
   .floating-element {
@@ -179,13 +199,32 @@
   /* Scroll Snap */
   .snap-container {
     height: 100vh;
+    height: 100dvh; /* Dynamic viewport height — handles mobile browser chrome */
     overflow-y: scroll;
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
   }
 
+  /* On mobile, use proximity snap so content doesn't get stuck */
+  @media (max-width: 767px) {
+    .snap-container {
+      scroll-snap-type: y proximity;
+    }
+  }
+
   .snap-section {
     scroll-snap-align: start;
+  }
+
+  /* Dynamic viewport height utility with fallback */
+  .h-screen-safe {
+    height: 100vh;
+    height: 100dvh;
+  }
+
+  .min-h-screen-safe {
+    min-height: 100vh;
+    min-height: 100dvh;
   }
 }
 
@@ -197,7 +236,13 @@
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
+}
+
+@media (min-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
 }
 
 ::-webkit-scrollbar-track {

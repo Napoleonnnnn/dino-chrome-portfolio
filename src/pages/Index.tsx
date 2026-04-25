@@ -9,12 +9,14 @@ import { ContactSection } from '../components/sections/ContactSection';
 import { Footer } from '../components/sections/Footer';
 import { FloatingAssets } from '../components/3d/FloatingAssets';
 import { StarsBackground } from '../components/StarsBackground';
+import { DynamicFavicon } from '../components/DynamicFavicon';
 
 const Index = () => {
   const mainRef = useRef<HTMLElement>(null);
 
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+      <DynamicFavicon />
       <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
         {/* Stars/dots background */}
         <StarsBackground />
@@ -26,19 +28,19 @@ const Index = () => {
         
         {/* Snap Container - Smooth Scroll */}
         <main ref={mainRef} className="snap-container relative z-10">
-          <section className="snap-section h-screen">
+          <section className="snap-section h-screen-safe">
             <HeroSection />
           </section>
-          <section className="snap-section min-h-screen">
+          <section className="snap-section min-h-screen-safe">
             <ProjectsSection />
           </section>
-          <section className="snap-section h-screen">
+          <section className="snap-section min-h-screen-safe">
             <AboutSection />
           </section>
-          <section className="snap-section h-screen">
+          <section className="snap-section min-h-screen-safe">
             <ServicesSection />
           </section>
-          <section className="snap-section min-h-screen">
+          <section className="snap-section min-h-screen-safe">
             <ContactSection />
           </section>
         </main>

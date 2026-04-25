@@ -4,9 +4,14 @@ import { BirdModel } from './BirdModel';
 import { CloudsModel } from './CloudsModel';
 import { CactusModel } from './CactusModel';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export function FloatingAssets() {
   const themeColor = useThemeColor();
+  const isMobile = useIsMobile();
+
+  // Don't render any 3D assets on mobile — too heavy for GPU/battery
+  if (isMobile) return null;
 
   return (
     <>

@@ -4,20 +4,23 @@ import { TypeAnimation } from 'react-type-animation';
 
 export function HeroSection() {
   return (
-    <section className="relative h-full flex items-center justify-center overflow-hidden">
-      <div className="container mx-auto px-6 lg:px-12 relative z-10">
+    <section id="hero" aria-label="Introduction" className="relative h-full flex items-center justify-center overflow-hidden">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-12 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
+          {/* SEO-friendly static heading for crawlers */}
+          <h1 className="sr-only">Akbar Permana — Junior AI Engineer & Front-End Developer Portfolio</h1>
+
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <p className="text-mono text-muted-foreground mb-6 tracking-widest uppercase">
+            <p className="text-mono text-muted-foreground mb-4 sm:mb-6 tracking-widest uppercase">
               junior ai engineer, junior front end dev
             </p>
           </motion.div>
           
-          <h1 className="heading-xl mb-8 min-h-[250px] md:min-h-[280px]">
+          <div className="heading-xl mb-6 sm:mb-8 min-h-[180px] sm:min-h-[220px] md:min-h-[250px] lg:min-h-[280px]" aria-hidden="true" role="presentation">
             Hi,
             <br />
             <span className="text-muted-foreground">People call me</span>
@@ -57,13 +60,13 @@ export function HeroSection() {
               cursor={true}
               repeat={Infinity}
             />
-          </h1>
+          </div>
           
           <motion.p
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.0 }}
-            className="text-lg md:text-xl text-muted-foreground mb-12 max-w-xl mx-auto leading-relaxed"
+            className="text-base sm:text-lg md:text-xl text-muted-foreground mb-8 sm:mb-12 max-w-xl mx-auto leading-relaxed px-2"
           >
             I am a student passionate about building web experiences and exploring the world of AI.
           </motion.p>
@@ -72,24 +75,24 @@ export function HeroSection() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 1.2 }}
-            className="flex flex-wrap justify-center gap-4"
+            className="flex flex-col sm:flex-row flex-wrap justify-center gap-3 sm:gap-4 px-4 sm:px-0"
           >
-            <a href="#work" className="btn-primary">
+            <a href="#work" className="btn-primary text-center">
               View My Work
             </a>
-            <a href="#contact" className="btn-outline">gme
+            <a href="#contact" className="btn-outline text-center">
               Get In Touch
             </a>
           </motion.div>
         </div>
       </div>
 
-      {/* Scroll indicator */}
+      {/* Scroll indicator — hidden on very small screens */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 1.5 }}
-        className="absolute bottom-12 left-1/2 -translate-x-1/2"
+        className="absolute bottom-6 sm:bottom-12 left-1/2 -translate-x-1/2 hidden sm:block"
       >
         <motion.div
           animate={{ y: [0, 8, 0] }}
