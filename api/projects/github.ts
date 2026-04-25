@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { Octokit } from 'octokit';
-import { handleCors } from '../_lib/auth';
+import { handleCors } from '../_lib/auth.js';
 
 const GITHUB_USERNAME = process.env.GITHUB_USERNAME || 'Napoleonnnnn';
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || ''; // Optional, increases rate limit

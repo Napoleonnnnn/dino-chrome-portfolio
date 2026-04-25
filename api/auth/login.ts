@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import jwt = require('jsonwebtoken');
 import bcrypt = require('bcryptjs');
-import { handleCors } from '../_lib/auth';
+import { handleCors } from '../_lib/auth.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'change-me-in-production';
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
