@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Journey Timeline ───────────────────────────────────
+
+model Journey {
+  id          String   @id @default(uuid())
+  slug        String   @unique
+  title       String
+  summary     String   // Short text for timeline card
+  content     String?  // Full markdown/text for detail page
+  date        DateTime
+  location    String?
+  coverImage  String?  // URL to cover/hero image
+  order       Int      @default(0)
+  isPublished Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  images JourneyImage[]
+
+  @@map("journeys")
+}
+
+model JourneyImage {
+  id        String   @id @default(uuid())
+  journeyId String
+  imageUrl  String
+  caption   String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  journey Journey @relation(fields: [journeyId], references: [id], onDelete: Cascade)
+
+  @@map("journey_images")
+}
+
+// ─── Project Configuration ──────────────────────────────
+
+model ProjectConfig {
+  id             String   @id @default(uuid())
+  githubRepoName String   @unique // e.g. "NapoleonPro/dino-chrome-portfolio"
+  customTitle    String?  // Override GitHub repo name
+  customDesc     String?  // Override GitHub description
+  category       String?
+  isVisible      Boolean  @default(true)
+  displayOrder   Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("project_configs")
+}

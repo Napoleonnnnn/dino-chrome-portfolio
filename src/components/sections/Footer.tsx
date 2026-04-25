@@ -18,7 +18,7 @@ export function Footer() {
 
           <div className="flex items-center gap-3 sm:gap-4">
             <a
-              href="https://github.com/NapoleonPro"
+              href="https://github.com/Napoleonnnnn"
               target="_blank"
               rel="noopener noreferrer"
               className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-foreground hover:text-background transition-colors"

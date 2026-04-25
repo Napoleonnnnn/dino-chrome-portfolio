@@ -5,6 +5,7 @@ import { HeroSection } from '../components/sections/HeroSection';
 import { AboutSection } from '../components/sections/AboutSection';
 import { ProjectsSection } from '../components/sections/ProjectsSection';
 import { ServicesSection } from '../components/sections/ServicesSection';
+import { JourneySection } from '../components/sections/JourneySection';
 import { ContactSection } from '../components/sections/ContactSection';
 import { Footer } from '../components/sections/Footer';
 import { FloatingAssets } from '../components/3d/FloatingAssets';
@@ -39,6 +40,9 @@ const Index = () => {
           </section>
           <section className="snap-section min-h-screen-safe">
             <ServicesSection />
+          </section>
+          <section className="snap-section min-h-screen-safe">
+            <JourneySection />
           </section>
           <section className="snap-section min-h-screen-safe">
             <ContactSection />

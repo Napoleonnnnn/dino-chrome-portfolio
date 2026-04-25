@@ -8,6 +8,7 @@ const navItems = [
   { href: '#work', label: 'Work' },
   { href: '#about', label: 'About' },
   { href: '#services', label: 'Services' },
+  { href: '#journey', label: 'Journey' },
   { href: '#contact', label: 'Contact' },
 ];
 const sectionIds = navItems.map(item => item.href.substring(1));
