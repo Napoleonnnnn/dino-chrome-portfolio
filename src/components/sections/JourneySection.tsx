@@ -1,56 +1,16 @@
 import { motion } from 'framer-motion';
 import { Calendar, MapPin } from 'lucide-react';
 
-// Dummy data — will be replaced with API fetch from CMS later
-const journeyData = [
-  {
-    id: '1',
-    date: '2024',
-    title: 'Started AI Engineering Journey',
-    description: 'Began exploring the world of Artificial Intelligence and Machine Learning. Built my first classification model and deployed it as an API.',
-    imageUrl: null,
-    location: 'Self-learning',
-  },
-  {
-    id: '2',
-    date: '2024',
-    title: 'BNSP Junior Network Administrator',
-    description: 'Earned the BNSP certification for Junior Network Administrator. Created automation scripts for network configuration and management.',
-    imageUrl: null,
-    location: 'BNSP Certification',
-  },
-  {
-    id: '3',
-    date: '2023',
-    title: 'Innovillage 2023 — Top 180 Finalist',
-    description: 'Developed a web-based application for the Innovillage competition and reached the top 180 finalists nationwide. A great experience in teamwork and product development.',
-    imageUrl: null,
-    location: 'National Competition',
-  },
-  {
-    id: '4',
-    date: '2023',
-    title: 'Discovered Web Development',
-    description: 'Fell in love with building for the web. Started learning HTML, CSS, JavaScript, and React. Built my first interactive projects.',
-    imageUrl: null,
-    location: 'Self-learning',
-  },
-  {
-    id: '5',
-    date: '2022',
-    title: 'The Beginning',
-    description: 'Started my journey into the world of programming. Wrote my first lines of code and realized this is what I want to do.',
-    imageUrl: null,
-    location: 'University',
-  },
-];
+import { useQuery } from '@tanstack/react-query';
+import { format } from 'date-fns';
+import { Loader2 } from 'lucide-react';
 
 interface JourneyEntry {
   id: string;
   date: string;
   title: string;
-  description: string;
-  imageUrl: string | null;
+  summary: string;
+  coverImage: string | null;
   location?: string;
 }
 
@@ -71,10 +31,10 @@ function TimelineCard({ entry, index }: { entry: JourneyEntry; index: number }) 
             className="card-elevated group"
           >
             {/* Image */}
-            {entry.imageUrl && (
+            {entry.coverImage && (
               <div className="mb-4 rounded-xl overflow-hidden aspect-video bg-secondary">
                 <img
-                  src={entry.imageUrl}
+                  src={entry.coverImage}
                   alt={entry.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
@@ -86,7 +46,7 @@ function TimelineCard({ entry, index }: { entry: JourneyEntry; index: number }) 
             <div className="flex items-center gap-3 mb-3">
               <span className="flex items-center gap-1.5 text-mono text-muted-foreground">
                 <Calendar size={14} />
-                {entry.date}
+                {format(new Date(entry.date), 'MMM yyyy')}
               </span>
               {entry.location && (
                 <>
@@ -101,7 +61,7 @@ function TimelineCard({ entry, index }: { entry: JourneyEntry; index: number }) 
 
             <h3 className="heading-md mb-2">{entry.title}</h3>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              {entry.description}
+              {entry.summary}
             </p>
           </motion.div>
         </div>
@@ -126,7 +86,7 @@ function TimelineCard({ entry, index }: { entry: JourneyEntry; index: number }) 
             transition={{ duration: 0.4, delay: 0.3 }}
             className={`text-mono text-muted-foreground text-lg ${isLeft ? 'text-left' : 'text-right'}`}
           >
-            {entry.date}
+            {format(new Date(entry.date), 'yyyy')}
           </motion.div>
         </div>
       </div>
@@ -154,10 +114,10 @@ function TimelineCard({ entry, index }: { entry: JourneyEntry; index: number }) 
             className="card-elevated"
           >
             {/* Image */}
-            {entry.imageUrl && (
+            {entry.coverImage && (
               <div className="mb-3 rounded-lg overflow-hidden aspect-video bg-secondary">
                 <img
-                  src={entry.imageUrl}
+                  src={entry.coverImage}
                   alt={entry.title}
                   className="w-full h-full object-cover"
                   loading="lazy"
@@ -169,7 +129,7 @@ function TimelineCard({ entry, index }: { entry: JourneyEntry; index: number }) 
             <div className="flex flex-wrap items-center gap-2 mb-2">
               <span className="flex items-center gap-1 text-mono text-muted-foreground text-xs">
                 <Calendar size={12} />
-                {entry.date}
+                {format(new Date(entry.date), 'MMM yyyy')}
               </span>
               {entry.location && (
                 <>
@@ -184,7 +144,7 @@ function TimelineCard({ entry, index }: { entry: JourneyEntry; index: number }) 
 
             <h3 className="text-base sm:text-lg font-semibold mb-1.5">{entry.title}</h3>
             <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
-              {entry.description}
+              {entry.summary}
             </p>
           </motion.div>
         </div>
@@ -194,6 +154,15 @@ function TimelineCard({ entry, index }: { entry: JourneyEntry; index: number }) 
 }
 
 export function JourneySection() {
+  const { data: journeys, isLoading } = useQuery<JourneyEntry[]>({
+    queryKey: ['journeys'],
+    queryFn: async () => {
+      const res = await fetch('/api/journey');
+      if (!res.ok) throw new Error('Failed to fetch journeys');
+      return res.json();
+    }
+  });
+
   return (
     <section id="journey" aria-label="My Journey" className="min-h-screen-safe relative z-10 flex flex-col justify-center py-16 sm:py-20 md:py-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-12">
@@ -222,11 +191,17 @@ export function JourneySection() {
           <div className="md:hidden absolute left-[15px] sm:left-[19px] top-0 bottom-0 w-px bg-border" />
 
           {/* Journey entries */}
-          <div className="md:space-y-16">
-            {journeyData.map((entry, index) => (
-              <TimelineCard key={entry.id} entry={entry} index={index} />
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="flex justify-center py-20 relative z-10">
+              <Loader2 className="animate-spin text-muted-foreground" size={32} />
+            </div>
+          ) : (
+            <div className="md:space-y-16">
+              {journeys?.map((entry, index) => (
+                <TimelineCard key={entry.id} entry={entry} index={index} />
+              ))}
+            </div>
+          )}
 
           {/* End dot */}
           <div className="flex justify-center md:justify-center mt-4 md:mt-8 relative z-10">
