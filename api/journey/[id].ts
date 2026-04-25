@@ -3,32 +3,24 @@ import { prisma } from '../_lib/prisma';
 import { handleCors, requireAuth } from '../_lib/auth';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  try {
-    if (handleCors(req, res)) return;
+  if (handleCors(req, res)) return;
 
-    const { id } = req.query;
-    const journeyId = Array.isArray(id) ? id[0] : id;
+  const { id } = req.query;
+  const journeyId = Array.isArray(id) ? id[0] : id;
 
-    if (!journeyId) {
-      return res.status(400).json({ error: 'Journey ID or slug is required' });
-    }
+  if (!journeyId) {
+    return res.status(400).json({ error: 'Journey ID or slug is required' });
+  }
 
-    switch (req.method) {
-      case 'GET':
-        return await getJourney(journeyId, res);
-      case 'PUT':
-        return await updateJourney(journeyId, req, res);
-      case 'DELETE':
-        return await deleteJourney(journeyId, req, res);
-      default:
-        return res.status(405).json({ error: 'Method not allowed' });
-    }
-  } catch (error: any) {
-    console.error('API Error:', error);
-    return res.status(500).json({ 
-      error: 'Internal Server Error', 
-      message: error.message || String(error)
-    });
+  switch (req.method) {
+    case 'GET':
+      return getJourney(journeyId, res);
+    case 'PUT':
+      return updateJourney(journeyId, req, res);
+    case 'DELETE':
+      return deleteJourney(journeyId, req, res);
+    default:
+      return res.status(405).json({ error: 'Method not allowed' });
   }
 }
 
