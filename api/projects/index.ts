@@ -1,19 +1,27 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { prisma } from '../_lib/prisma.js';
-import { handleCors, requireAuth } from '../_lib/auth.js';
+import { prisma } from '../_lib/prisma';
+import { handleCors, requireAuth } from '../_lib/auth';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (handleCors(req, res)) return;
+  try {
+    if (handleCors(req, res)) return;
 
-  switch (req.method) {
-    case 'GET':
-      return getProjectConfigs(res);
-    case 'POST':
-      return upsertProjectConfig(req, res);
-    case 'DELETE':
-      return deleteProjectConfig(req, res);
-    default:
-      return res.status(405).json({ error: 'Method not allowed' });
+    switch (req.method) {
+      case 'GET':
+        return getProjectConfigs(res);
+      case 'POST':
+        return upsertProjectConfig(req, res);
+      case 'DELETE':
+        return deleteProjectConfig(req, res);
+      default:
+        return res.status(405).json({ error: 'Method not allowed' });
+    }
+  } catch (error: any) {
+    console.error('API Error:', error);
+    return res.status(500).json({ 
+      error: 'Internal Server Error', 
+      message: error.message || String(error)
+    });
   }
 }
 
